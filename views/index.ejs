@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Weather Dashboard</title>
+    <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Weather Dashboard</h1>
+
+        <!-- Search form -->
+        <form action="/" method="GET">
+            <input type="text" name="city" placeholder="Enter city" required value="<%= city %>">
+            <button type="submit">Get Weather</button>
+        </form>
+
+        <% if (weatherData) { %>
+            <div class="weather-info">
+                <h2>Weather in <%= weatherData.name %></h2>
+                <p><strong>Temperature:</strong> <%= weatherData.main.temp %>°C</p>
+                <p><strong>Weather:</strong> <%= weatherData.weather[0].description %></p>
+                <p><strong>Humidity:</strong> <%= weatherData.main.humidity %>%</p>
+                <p><strong>Wind Speed:</strong> <%= weatherData.wind.speed %> m/s</p>
+            </div>
+        <% } else if (error) { %>
+            <p class="error"><%= error %></p>
+        <% } %>
+    </div>
+</body>
+</html>
+
