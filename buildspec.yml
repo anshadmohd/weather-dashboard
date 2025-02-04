@@ -11,8 +11,7 @@ phases:
       - chmod +x argocd
       - mv argocd /usr/local/bin/
       - ls -lah /usr/local/bin/argocd
-      - file /usr/local/bin/argocd
-      - argocd version  # Verify installation
+
 
 
   build:
