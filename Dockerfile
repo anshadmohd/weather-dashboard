@@ -1,6 +1,5 @@
 # Use Node.js official image as the base image
-FROM 976193254957.dkr.ecr.us-east-1.amazonaws.com/base:node14
-
+FROM 976193254957.dkr.ecr.us-east-1.amazonaws.com/base:node14-image
 # Set the working directory inside the container
 WORKDIR /usr/src/app
 
