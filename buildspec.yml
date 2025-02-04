@@ -4,9 +4,9 @@ env:
   variables:
     IMAGE_REPO: "976193254957.dkr.ecr.us-east-1.amazonaws.com/my-node-app"
 
-phases: 
-  pre_build: 
-    commands: 
+phases:
+  pre_build:
+    commands:
       - echo "Logging in to Amazon ECR...."
       - aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin $IMAGE_REPO
       - echo "Installing ArgoCD CLI..."
@@ -19,7 +19,6 @@ phases:
       - export IMAGE_TAG=$(date +%Y%m%d%H%M%S)  # ✅ Ensure IMAGE_TAG is set
       - echo "Image Tag: $IMAGE_TAG"
       - docker build -t $IMAGE_REPO:$IMAGE_TAG .
-      - docker tag $IMAGE_REPO:$IMAGE_TAG $IMAGE_REPO:latest
 
   post_build:
     commands:
