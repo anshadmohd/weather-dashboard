@@ -31,11 +31,11 @@ phases:
       - echo Logging into ArgoCD...
       - argocd login 192.168.32.59:30080  --username ${ARGOCD_USERNAME} --password ${ARGOCD_PASSWORD} --insecure
       - echo Updating image repository in ArgoCD...
-      - argocd --grpc-web app set my-node-app -p image.repository=976193254957.dkr.ecr.us-east-1.amazonaws.com/base
+      - argocd --grpc-web app set nodejs-app -p image.repository=976193254957.dkr.ecr.us-east-1.amazonaws.com/base
       - echo Setting image tag in ArgoCD...
-      - argocd --grpc-web app set my-node-app -p image.tag=$IMAGE_TAG
+      - argocd --grpc-web app set nodejs-app -p image.tag=$IMAGE_TAG
       - echo Triggering ArgoCD sync...
-      - argocd app sync my-node-app --revision $IMAGE_TAG
+      - argocd app sync nodejs-app --revision $IMAGE_TAG
 
 artifacts:
   files: "**/*"
