@@ -1,0 +1,31 @@
+version: 0.2
+
+phases:
+  pre_build:
+    commands:
+      - echo Logging in to Amazon ECR...
+      - aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 976193254957.dkr.ecr.us-east-1.amazonaws.com
+      - echo Installing ArgoCD CLI...
+      - curl -sSL https://github.com/argoproj/argo-cd/releases/download/v2.6.4/argocd-linux-amd64 -o /usr/local/bin/argocd
+      - chmod +x /usr/local/bin/argocd
+  build:
+    commands:
+      - echo Building Docker image...
+      - docker build -t my-node-app .
+      - docker tag my-node-app:latest 976193254957.dkr.ecr.us-east-1.amazonaws.com/base:$CODEBUILD_BUILD_ID
+  post_build:
+    commands:
+      - echo Pushing Docker image to ECR...
+      - docker push 976193254957.dkr.ecr.us-east-1.amazonaws.com/base:$CODEBUILD_BUILD_ID
+      - echo Image pushed with tag $CODEBUILD_BUILD_ID
+      - echo Logging into ArgoCD...
+      - argocd login 192.168.32.59:30080  --username ${ARGOCD_USERNAME} --password ${ARGOCD_PASSWORD} --insecure
+      - echo Updating image repository in ArgoCD...
+      - argocd --grpc-web app set my-node-app -p image.repository=976193254957.dkr.ecr.us-east-1.amazonaws.com/base
+      - echo Setting image tag in ArgoCD...
+      - argocd --grpc-web app set my-node-app -p image.tag=$CODEBUILD_BUILD_ID
+      - echo Triggering ArgoCD sync...
+      - argocd app sync my-node-app --revision $CODEBUILD_BUILD_ID
+
+artifacts:
+  files: "**/*"
