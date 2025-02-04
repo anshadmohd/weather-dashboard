@@ -10,13 +10,14 @@ phases:
       - echo "Logging in to Amazon ECR...."
       - aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin $IMAGE_REPO
       - echo "Installing ArgoCD CLI..."
-      - curl -sSL -o /usr/local/bin/argocd https://github.com/argoproj/argo-cd/releases/download/v2.6.4/argocd-linux-amd64
+      - curl -sSL -o /usr/local/bin/argocd https://github.com/argoproj/argo-cd/releases/latest/download/argocd-linux-amd64
       - chmod +x /usr/local/bin/argocd
 
   build:
     commands:
       - echo "Building Docker image..."
-      - IMAGE_TAG=$(date +%Y%m%d%H%M%S)
+      - export IMAGE_TAG=$(date +%Y%m%d%H%M%S)  # ✅ Ensure IMAGE_TAG is set
+      - echo "Image Tag: $IMAGE_TAG"
       - docker build -t $IMAGE_REPO:$IMAGE_TAG .
       - docker tag $IMAGE_REPO:$IMAGE_TAG $IMAGE_REPO:latest
 
@@ -24,7 +25,6 @@ phases:
     commands:
       - echo "Pushing Docker image to ECR..."
       - docker push $IMAGE_REPO:$IMAGE_TAG
-      - docker push $IMAGE_REPO:latest
       - echo "Image pushed successfully: $IMAGE_TAG"
 
       - echo "Logging into ArgoCD..."
