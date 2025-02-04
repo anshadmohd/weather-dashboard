@@ -20,7 +20,15 @@ phases:
       - echo "Pushing the Docker image to Amazon ECR..."
       - docker images
       - docker push $REPO_URI:$IMAGE_TAG
-      - echo "Build completed"
+      - echo "Push completed"
+      - echo Logging into ArgoCD...
+      - argocd login 192.168.32.59:30080  --username ${ARGOCD_USERNAME} --password ${ARGOCD_PASSWORD} --insecure
+      - echo Updating image repository in ArgoCD...
+      - argocd --grpc-web app set my-node-app -p image.repository=976193254957.dkr.ecr.us-east-1.amazonaws.com/base
+      - echo Setting image tag in ArgoCD...
+      - argocd --grpc-web app set my-node-app -p image.tag=$IMAGE_TAG
+      - echo Triggering ArgoCD sync...
+      - argocd app sync my-node-app --revision $IMAGE_TAG
 
 artifacts:
   files: "**/*"
