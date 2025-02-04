@@ -6,9 +6,14 @@ phases:
       - echo "Logging in to Amazon ECR..."
       - aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 976193254957.dkr.ecr.us-east-1.amazonaws.com
       - IMAGE_TAG=$(date +%Y%m%d%H%M%S)
-      - echo Installing ArgoCD CLI...
-      - curl -sSL https://github.com/argoproj/argo-cd/releases/download/v2.6.4/argocd-linux-amd64 -o /usr/local/bin/argocd
-      - chmod +x /usr/local/bin/argocd
+      - echo Installing ArgoCD CLI for ARM64...
+      - curl -sSL -o argocd https://github.com/argoproj/argo-cd/releases/download/v2.6.4/argocd-linux-arm64
+      - chmod +x argocd
+      - mv argocd /usr/local/bin/
+      - ls -lah /usr/local/bin/argocd
+      - file /usr/local/bin/argocd
+      - argocd version  # Verify installation
+
 
   build:
     commands:
