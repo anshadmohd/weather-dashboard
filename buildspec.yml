@@ -10,9 +10,10 @@ phases:
   build:
     commands:
       - echo "Building the Docker image..."
+      - REPO_URI=976193254957.dkr.ecr.us-east-1.amazonaws.com
       - ls
       - pwd
-      - docker build -t 976193254957.dkr.ecr.us-east-1.amazonaws.com:$IMAGE_TAG .
+      - docker build -t $REPO_URI:$IMAGE_TAG .
       - docker tag 976193254957.dkr.ecr.us-east-1.amazonaws.com:$IMAGE_TAG $REPO_URI:latest
 
   post_build:
